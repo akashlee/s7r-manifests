@@ -1,0 +1,246 @@
+{
+  "name": "mmp-pipeline-1-1-0",
+  "application": "mmp",
+  "stages": [
+    {
+      "account": "spinnaker",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "v1",
+          "kind": "Service",
+          "metadata": {
+            "labels": {
+              "app": "s7r-a",
+              "version": "1.1.0"
+            },
+            "name": "s7r-a-service",
+            "namespace": "spinnaker"
+          },
+          "spec": {
+            "ports": [
+              {
+                "port": 8080,
+                "targetPort": 8080
+              }
+            ],
+            "selector": {
+              "app": "s7r-a",
+              "version": "1.1.0"
+            }
+          }
+        },
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "metadata": {
+            "name": "s7r-a",
+            "namespace": "spinnaker"
+          },
+          "spec": {
+            "replicas": 1,
+            "selector": {
+              "matchLabels": {
+                "app": "s7r-a",
+                "version": "1.1.0"
+              }
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "app": "s7r-a",
+                  "version": "1.1.0"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "image": "docker.synchronoss.net/sncr/mmp/spinnaker/s7r-a:1.1.0",
+                    "name": "s7r-a",
+                    "ports": [
+                      {
+                        "containerPort": 8080
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "mmp"
+      },
+      "source": "text",
+      "name": "Deploy (s7r-a)",
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "type": "deployManifest"
+    },
+    {
+      "account": "spinnaker",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "v1",
+          "kind": "Service",
+          "metadata": {
+            "labels": {
+              "app": "s7r-b",
+              "version": "1.1.0"
+            },
+            "name": "s7r-b-service",
+            "namespace": "spinnaker"
+          },
+          "spec": {
+            "ports": [
+              {
+                "port": 8080,
+                "targetPort": 8080
+              }
+            ],
+            "selector": {
+              "app": "s7r-b",
+              "version": "1.1.0"
+            }
+          }
+        },
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "metadata": {
+            "name": "s7r-b",
+            "namespace": "spinnaker"
+          },
+          "spec": {
+            "replicas": 1,
+            "selector": {
+              "matchLabels": {
+                "app": "s7r-b",
+                "version": "1.1.0"
+              }
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "app": "s7r-b",
+                  "version": "1.1.0"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "image": "docker.synchronoss.net/sncr/mmp/spinnaker/s7r-b:1.1.0",
+                    "name": "s7r-b",
+                    "ports": [
+                      {
+                        "containerPort": 8080
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "mmp"
+      },
+      "source": "text",
+      "name": "Deploy (s7r-b)",
+      "refId": "2",
+      "requisiteStageRefIds": [
+        "1"
+      ],
+      "type": "deployManifest"
+    },
+    {
+      "name": "Manual Judgment",
+      "refId": "3",
+      "requisiteStageRefIds": [
+        "2"
+      ],
+      "type": "manualJudgment"
+    },
+    {
+      "account": "spinnaker",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "v1",
+          "kind": "Service",
+          "metadata": {
+            "labels": {
+              "app": "s7r",
+              "version": "1.1.0"
+            },
+            "name": "s7r-service",
+            "namespace": "spinnaker"
+          },
+          "spec": {
+            "ports": [
+              {
+                "port": 8080,
+                "targetPort": 8080
+              }
+            ],
+            "selector": {
+              "app": "s7r",
+              "version": "1.1.0"
+            }
+          }
+        },
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "metadata": {
+            "name": "s7r",
+            "namespace": "spinnaker"
+          },
+          "spec": {
+            "replicas": 1,
+            "selector": {
+              "matchLabels": {
+                "app": "s7r",
+                "version": "1.1.0"
+              }
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "app": "s7r",
+                  "version": "1.1.0"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "image": "docker.synchronoss.net/sncr/mmp/spinnaker/s7r:1.1.0",
+                    "name": "s7r",
+                    "ports": [
+                      {
+                        "containerPort": 8080
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "mmp"
+      },
+      "source": "text",
+      "name": "Deploy (s7r)",
+      "refId": "4",
+      "requisiteStageRefIds": [
+        "3"
+      ],
+      "type": "deployManifest"
+    }
+  ]
+}
